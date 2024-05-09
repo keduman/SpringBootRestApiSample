@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class StudentRestController {
@@ -48,4 +49,9 @@ public class StudentRestController {
         dao.deleteStudent(regNumber);
     }
 
+    @RequestMapping(value = "/cache", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
+    @ResponseBody
+    public Map<String, Student> getCache(){
+        return dao.getCacheContent();
+    }
 }

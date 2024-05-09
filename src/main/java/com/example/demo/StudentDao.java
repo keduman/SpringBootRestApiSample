@@ -1,5 +1,10 @@
 package com.example.demo;
 
+import com.hazelcast.config.Config;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.core.HazelcastInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -7,12 +12,14 @@ import java.util.*;
 @Repository
 public class StudentDao {
 
-    private static final Map<String, Student> studentMap = new HashMap<String, Student>();
+    private final Map<String, Student> studentMap;
 
-    static {
+    @Autowired
+    public StudentDao(HazelcastInstance hazelcastInstance) {
+        studentMap = hazelcastInstance.getMap("students");
         initStudents();
     }
-    private static void initStudents(){
+    public void initStudents(){
         Student stu1 = new Student("Mark Twain", 20,"1001");
         Student stu2 = new Student("James Harden", 22,"1002");
 
@@ -44,5 +51,9 @@ public class StudentDao {
        students.addAll(collection);
        return students;
    }
+
+    public Map<String, Student> getCacheContent() {
+        return studentMap;
+    }
 
 }
